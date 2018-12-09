@@ -20,6 +20,8 @@ public:
   void Set_Telefono(int telefono){Telefono_=telefono;}
   string Get_Email(){return Email_;}
   void Set_Email(string email){Email_=email;}
+  string Get_Direccion(){return Direccion_;}
+  void Set_Direccion(string direccion){Direccion_=direccion;}
   string Get_Fecha_Nacimiento(){return Fecha_Nacimiento_;}
   void Set_Fecha_Nacimiento(string fecha_nacimiento){Fecha_Nacimiento_=fecha_nacimiento;}
 };
@@ -42,11 +44,13 @@ class Agenda{
 private:
   Alumno alumnos[];
 public:
+  Alumno Get_Alumno(int h){return alumnos[h];}
+  void Set_Alumno(Alumno alumno, int h){alumnos[h]=alumno;}
   bool Buscar_Alumno(string cadena);
-  //void Imprimir_Pantalla(){}
-  //void Visualizar_Alumno(){}
+  //void Imprimir_Pantalla();
+  //void Visualizar_Alumno();
   void Insertar_Alumno();
-  //void Modificar_Alumno();
+  void Modificar_Alumno();
   void Eliminar_Alumno();
 };
 
@@ -59,11 +63,11 @@ public:
   void Set_Rol(bool rol){Rol_=rol;}
   Agenda Get_Agenda(){return agenda_;}
   void Set_Agenda(Agenda agenda){agenda_=agenda;}
-  //void Hacer_Copia(){}
-  ///void Registrar_Profesor(){}
-  //void Iniciar_Sesion(){}
-  //void Guardar_Fichero(){}
-  //void Cargar_Fichero(){}
+  //void Hacer_Copia();
+  ///void Registrar_Profesor();
+  //void Iniciar_Sesion();
+  void Guardar_Fichero();
+  void Cargar_Fichero();
 };
 
 #endif
