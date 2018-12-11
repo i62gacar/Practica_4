@@ -1,12 +1,12 @@
-## **Buscar Alumno**, *prioridad:* 0.
-## **Introducir nuevo alumno**, *prioridad* 1.
-## **Modificar alumno**, *prioridad:* 2.
-## **Eliminar usuario**, *prioridad:* 2.
-## **Cargar fichero**, *prioridad:* 3.
-## **Guardar fichero**, *prioridad:* 3.
-## **Visualizar grupo**, *prioridad:* 4.
-## **Imprimir datos**, *prioridad:* 4.
-## **Hacer Copia de seguridad**, *prioridad:* 5.
-## **Cargar copia de seguridad**, *prioridad:* 5.
-## **Registrar Profesor**, *prioridad:* 6.
-## **Iniciar sesión**, *prioridad:* 6.
+## **Buscar Alumno**, *prioridad:* 0. *Duración:* 4.
+## **Introducir nuevo alumno**, *prioridad* 1. *Duración:* 2.
+## **Modificar alumno**, *prioridad:* 2. *Duración:* 2.
+## **Eliminar usuario**, *prioridad:* 2. *Duración:* 2.
+## **Cargar fichero**, *prioridad:* 3. *Duración:* 2.
+## **Guardar fichero**, *prioridad:* 3. *Duración:* 2.
+## **Visualizar grupo**, *prioridad:* 4. *Duración:* 1.
+## **Imprimir datos**, *prioridad:* 4. *Duración:* 1.
+## **Hacer Copia de seguridad**, *prioridad:* 5. *Duración:* 2.
+## **Cargar copia de seguridad**, *prioridad:* 5. *Duración:* 2.
+## **Registrar Profesor**, *prioridad:* 6. *Duración:* 3.
+## **Iniciar sesión**, *prioridad:* 6. *Duración:* 4.
