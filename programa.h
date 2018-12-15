@@ -2,6 +2,7 @@
 #define PROGRAMA_H
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -42,13 +43,14 @@ public:
 
 class Agenda{
 private:
-  Alumno alumnos[];
+  vector<Alumno> alumnos;
 public:
   Alumno Get_Alumno(int h){return alumnos[h];}
-  void Set_Alumno(Alumno alumno, int h){alumnos[h]=alumno;}
+  void Set_Alumno(Alumno alumno){alumnos.push_back(alumno);}
+  int Get_Tamano();
   bool Buscar_Alumno(string cadena);
-  //void Imprimir_Pantalla();
-  //void Visualizar_Alumno();
+  void Imprimir_Pantalla();
+  void Visualizar_Grupo();
   void Insertar_Alumno();
   void Modificar_Alumno();
   void Eliminar_Alumno();
@@ -57,15 +59,24 @@ public:
 class Profesor: public Persona{
 private:
   bool Rol_;
+  string Usuario_, Password_;
+  vector<Profesor> profes;
   Agenda agenda_;
 public:
+  string Get_Usuario(){return Usuario_;}
+  void Set_Usuario(string Usuario){Usuario_=Usuario;}
+  string Get_Password(){return Password_;}
+  void Set_Password(string Password){Password_=Password;}
+  Profesor Get_Profesor(int k){return profes[k];}
+  void Set_Profesor(Profesor p);
+  int Get_Tamano2();
   bool Get_Rol(){return Rol_;}
   void Set_Rol(bool rol){Rol_=rol;}
   Agenda Get_Agenda(){return agenda_;}
   void Set_Agenda(Agenda agenda){agenda_=agenda;}
-  //void Hacer_Copia();
-  ///void Registrar_Profesor();
-  //void Iniciar_Sesion();
+  void Hacer_Copia();
+  void Registrar_Profesor();
+  bool Iniciar_Sesion(string profe);
   void Guardar_Fichero();
   void Cargar_Fichero();
 };
