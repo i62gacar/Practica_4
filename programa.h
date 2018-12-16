@@ -29,15 +29,15 @@ public:
 
 class Alumno: public Persona{
 private:
-  int Curso_Mas_Alto_, Equipo_;
-  bool Lider_;
+  int Curso_Mas_Alto_, Equipo_, Lider_;
 public:
   int Get_Curso(){return Curso_Mas_Alto_;}
   void Set_Curso(int curso){Curso_Mas_Alto_=curso;}
   int Get_Equipo(){return Equipo_;}
   void Set_Equipo(int equipo){Equipo_=equipo;}
-  bool Get_Lider(){return Lider_;}
-  void Set_Lider(bool lider){Lider_=lider;}
+  int Get_Lider(){return Lider_;}
+  void Set_Lider(int lider){Lider_=lider;}
+  void Set_Alumno(Alumno alumno);
 };
 
 
@@ -58,27 +58,25 @@ public:
 
 class Profesor: public Persona{
 private:
-  bool Rol_;
-  string Usuario_, Password_;
-  vector<Profesor> profes;
+  string Usuario_, Password_, Rol_;
   Agenda agenda_;
 public:
   string Get_Usuario(){return Usuario_;}
   void Set_Usuario(string Usuario){Usuario_=Usuario;}
   string Get_Password(){return Password_;}
   void Set_Password(string Password){Password_=Password;}
-  Profesor Get_Profesor(int k){return profes[k];}
   void Set_Profesor(Profesor p);
-  int Get_Tamano2();
-  bool Get_Rol(){return Rol_;}
-  void Set_Rol(bool rol){Rol_=rol;}
+  string Get_Rol(){return Rol_;}
+  void Set_Rol(string rol){Rol_=rol;}
   Agenda Get_Agenda(){return agenda_;}
   void Set_Agenda(Agenda agenda){agenda_=agenda;}
   void Hacer_Copia();
-  void Registrar_Profesor();
-  bool Iniciar_Sesion(string profe);
+  void Cargar_Copia();
+  void Registrar_Profesor(vector<Profesor>& profesores);
+  bool Iniciar_Sesion(vector<Profesor>& profesores);
   void Guardar_Fichero();
   void Cargar_Fichero();
+  void Cargar_Usuarios(vector<Profesor>& profesores);
 };
 
 #endif
