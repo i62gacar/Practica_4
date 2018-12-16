@@ -2,13 +2,20 @@
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
+#include <string.h>
 #include "programa.h"
 
 using namespace std;
 
 
 int Agenda::Get_Tamano(){
-	int tam=alumnos.size();
+	int tam;
+	if(alumnos.empty()==true){
+		tam=0;
+	}
+	else{
+		tam=alumnos.size();
+	}
 	return tam;
 }
 
@@ -19,47 +26,61 @@ void Profesor::Set_Profesor(Profesor p){
 	Set_Rol(p.Get_Rol());
 }
 
+void Alumno::Set_Alumno(Alumno alumno){
+	Set_DNI(alumno.Get_DNI());
+	Set_Nombre(alumno.Get_Nombre());
+	Set_Apellido(alumno.Get_Apellido());
+	Set_Direccion(alumno.Get_Direccion());
+	Set_Email(alumno.Get_Email());
+	Set_Telefono(alumno.Get_Telefono());
+	Set_Fecha_Nacimiento(alumno.Get_Fecha_Nacimiento());
+	Set_Curso(alumno.Get_Curso());
+	Set_Equipo(alumno.Get_Equipo());
+	Set_Lider(alumno.Get_Lider());
+}
+
 bool Agenda::Buscar_Alumno(string cadena){
 
 	bool enc=false;
-	int auxy[20], n=0, i;
+	int aux[20], n=0, i;
 	string DNI;
-	for(i=0; i<Get_Tamano(); i++){		
-
-		if(cadena.compare(alumnos[i].Get_DNI())==0){
-
-			enc=true;
-		}
-		if(cadena.compare(alumnos[i].Get_Apellido())==0){
-
-			auxy[n]=i;
-			n++;
-		}
-
-		while(enc==false || n!=0){
-
-			if(n==1){
+	if(alumnos.empty()==true){
+		return enc;
+	}
+	else{
+		for(i=0; i<Get_Tamano() || enc==false; i++){		
+	
+			if(cadena==Get_Alumno(i).Get_DNI()){
 
 				enc=true;
 			}
+			if(cadena==Get_Alumno(i).Get_Apellido()){
+			
+				aux[n]=i;
+				n++;
+			}
+		}	
+		while(enc==false || n!=0){
+	
+			if(n==1){
+				enc=true;
+			}
 			if(n>1){
-
 				cout<<"Hay más de un alumno, introduce el DNI."<<endl;
 				cin>>DNI;
 				for(i=0; i<n; i++){
-					if(DNI.compare(alumnos[auxy[i]].Get_DNI())==0){
+					if(DNI==Get_Alumno(aux[i]).Get_DNI()){
 						enc=true;
 					}
 				}
-			}
+			}	
 		}
-	}
-	return enc;
+		return enc;
+	}	
 }
 
 void Agenda::Insertar_Alumno(){
-	
-	string DNI=NULL, Nombre=NULL, Apellidos=NULL, Email=NULL, Direccion=NULL, Fecha=NULL;
+	string DNI, Nombre, Apellidos, Email, Direccion, Fecha;
 	int Telefono=0, Curso=0, Equipo=0, lider;
 	int pos=Get_Tamano();
 	Alumno aux;
@@ -90,15 +111,15 @@ void Agenda::Insertar_Alumno(){
 		lider=2;
 	}
 
-	if(DNI.compare(NULL)==0){
+	if(DNI.compare("NULL")==0){
 		cout<<"ERROR, el DNI está vacío"<<endl;
 		return;
 	}
-	if(Nombre.compare(NULL)==0){
+	if(Nombre.compare("NULL")==0){
 		cout<<"ERROR, el Nombre está vacío"<<endl;
 		return;
 	}
-	if(Apellidos.compare(NULL)==0){
+	if(Apellidos.compare("NULL")==0){
 		cout<<"ERROR, el Apellido está vacío"<<endl;
 		return;
 	}
@@ -106,11 +127,11 @@ void Agenda::Insertar_Alumno(){
 		cout<<"ERROR, el Teléfono está vacío"<<endl;
 		return;
 	}
-	if(Email.compare(NULL)==0){
+	if(Email.compare("NULL")==0){
 		cout<<"ERROR, el Email está vacío"<<endl;
 		return;
 	}
-	if(Fecha.compare(NULL)==0){
+	if(Fecha.compare("NULL")==0){
 		cout<<"ERROR, la Fecha de Nacimiento está vacía"<<endl;
 		return;
 	}
@@ -294,33 +315,6 @@ void Profesor::Guardar_Fichero(){
 		while(!fichero.eof()){
 			fichero.read((char *) &aux, sizeof(Alumno));//Puede dar fallos por los strings, si ocurre eso, cambiar los strings por char.
 		}
-		/*while(ficheroEntrada.getline(dni, 256, ',')){
-			ficheroEntrada.getline(apellido, 256, ',');
-			ficheroEntrada.getline(nombre, 256, ',');
-			ficheroEntrada.getline(fecha, 256, ',');
-			ficheroEntrada.getline(telefono, 256, ',');
-			ficheroEntrada.getline(email, 256, ',');
-			ficheroEntrada.getline(direccion, 256, ',');
-			ficheroEntrada.getline(curso, 256, ',');
-			ficheroEntrada.getline(equipo, 256, ',');
-			ficheroEntrada.getline(lider, 256, '\n');
-			aux.Set_DNI(dni);
-			aux.Set_Nombre(nombre);
-			aux.Set_Apellido(apellido);
-			aux.Set_Direccion(direccion);
-			aux.Set_Fecha_Nacimiento(fecha);
-			aux.Set_Email(email);
-			aux.Set_Telefono(atoi(telefono));
-			aux.Set_Curso(atoi(curso));
-			aux.Set_Equipo(atoi(equipo));
-			if(atoi(lider)==1){
-				aux.Set_Lider(true);
-			}
-			else{
-				aux.Set_Lider(false);
-			}
-			agenda_.Set_Alumno(aux);
-		}Estas lineas sirven para recibir ficheros de texto y no binarios*/
 		fichero.close();
 	}
 	else{
@@ -366,7 +360,6 @@ todos los valores de un alumno y pasamos a la siguiente linea*/
 }
 
 void Profesor::Hacer_Copia(){
-	//Aqui es donde calculamos la fecha actual;
 	time_t rawtime;
 	struct tm * tlocal;
 	
@@ -424,51 +417,115 @@ void Profesor::Cargar_Copia(){
 }
 
 void Agenda::Imprimir_Pantalla(){
-	int tamano=Get_Tamano();
-	ofstream fich("Alumnos.md");
-	for(int i=0; i<tamano; i++){
-		cout<<"Alumno: "<<i<<endl;
-		cout<<"DNI: "<<Get_Alumno(i).Get_DNI()<<endl;
-		cout<<"Nombre: "<<Get_Alumno(i).Get_Nombre()<<endl;
-		cout<<"Apellido: "<<Get_Alumno(i).Get_Apellido()<<endl;
-		cout<<"Email: "<<Get_Alumno(i).Get_Email()<<endl;
-		cout<<"Direccion: "<<Get_Alumno(i).Get_Direccion()<<endl;
-		cout<<"Fecha de nacimiento: "<<Get_Alumno(i).Get_Fecha_Nacimiento()<<endl;
-		cout<<"Telefono: "<<Get_Alumno(i).Get_Telefono()<<endl;
-		cout<<"Curso mas alto: "<<Get_Alumno(i).Get_Curso()<<endl;
-		cout<<"Equipo: "<<Get_Alumno(i).Get_Equipo()<<endl;
-		if(Get_Alumno(i).Get_Lider()==1){
-			cout<<"El alumno es lider de grupo"<<endl<<endl;
+	int tamano=Get_Tamano(), opcion;
+	char dni[20], nombre[20], apellido[20], email[20], direccion[20], fecha[20];
+	Alumno aux;
+	ofstream fich("Alumnos.md", ios::binary);
+	if(fich.is_open()){
+/*		cout<<"Porque variable desea ordenar: "<<endl;
+		cout<<"1. DNI"<<endl;
+		cout<<"2. Nombre"<<endl;
+		cout<<"3. Apellido"<<endl;
+		cout<<"4. Curso mas alto"<<endl;
+		cin>>opcion;
+		switch(opcion){
+			case 1:
+				for(int i=0; i<tamano; i++){
+					for(int j=i; j<tamano; j++){
+						if(Get_Alumno(i).Get_DNI()<Get_Alumno(i).Get_DNI()){
+							aux.Set_Alumno(Get_Alumno(i));
+							Get_Alumno(i).Set_Alumno(Get_Alumno(j));
+							Get_Alumno(j).Set_Alumno(aux);
+						}
+					}
+				}
+			break;
+			
+			case 2:
+				for(int i=0; i<tamano; i++){
+					for(int j=i; j<tamano; j++){
+						if(Get_Alumno(i).Get_Nombre()<Get_Alumno(i).Get_Nombre()){
+							aux.Set_Alumno(Get_Alumno(i));
+							Get_Alumno(i).Set_Alumno(Get_Alumno(j));
+							Get_Alumno(j).Set_Alumno(aux);
+						}
+					}
+				}
+			break;
+			
+			case 3:
+				for(int i=0; i<tamano; i++){
+					for(int j=i; j<tamano; j++){
+						if(Get_Alumno(i).Get_Apellido()<Get_Alumno(i).Get_Apellido()){
+							aux.Set_Alumno(Get_Alumno(i));
+							Get_Alumno(i).Set_Alumno(Get_Alumno(j));
+							Get_Alumno(j).Set_Alumno(aux);
+						}
+					}
+				}
+			break;
+			
+			case 4:
+				for(int i=0; i<tamano; i++){
+					for(int j=i; j<tamano; j++){
+						if(Get_Alumno(i).Get_Curso()<Get_Alumno(i).Get_Curso()){
+							aux.Set_Alumno(Get_Alumno(i));
+							Get_Alumno(i).Set_Alumno(Get_Alumno(j));
+							Get_Alumno(j).Set_Alumno(aux);
+						}
+					}
+				}
+			break;
+			
+			default:
+				cout<<"Opcion incorrecta"<<endl;
+			break;
+		};*/
+		for(int i=0; i<tamano; i++){
+			cout<<"Alumno: "<<i<<endl;
+			cout<<"DNI: "<<Get_Alumno(i).Get_DNI()<<endl;
+			cout<<"Nombre: "<<Get_Alumno(i).Get_Nombre()<<endl;
+			cout<<"Apellido: "<<Get_Alumno(i).Get_Apellido()<<endl;
+			cout<<"Email: "<<Get_Alumno(i).Get_Email()<<endl;
+			cout<<"Direccion: "<<Get_Alumno(i).Get_Direccion()<<endl;
+			cout<<"Fecha de nacimiento: "<<Get_Alumno(i).Get_Fecha_Nacimiento()<<endl;
+			cout<<"Telefono: "<<Get_Alumno(i).Get_Telefono()<<endl;
+			cout<<"Curso mas alto: "<<Get_Alumno(i).Get_Curso()<<endl;
+			cout<<"Equipo: "<<Get_Alumno(i).Get_Equipo()<<endl;
+			if(Get_Alumno(i).Get_Lider()==1){
+				cout<<"El alumno es lider de grupo"<<endl<<endl;
+			}
+			else{
+				cout<<"El alumno no es lider del grupo"<<endl;
+			}
+			strcpy(dni, Get_Alumno(i).Get_DNI().c_str());
+			strcpy(nombre, Get_Alumno(i).Get_Nombre().c_str());
+			strcpy(apellido, Get_Alumno(i).Get_Apellido().c_str());
+			strcpy(email, Get_Alumno(i).Get_Email().c_str());
+			strcpy(direccion, Get_Alumno(i).Get_Direccion().c_str());
+			strcpy(fecha, Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
+			fich.write((char *)dni, sizeof(dni));
+			fich.write((char *)nombre, sizeof(nombre));
+			fich.write((char *)apellido, sizeof(apellido));
+			fich.write((char *)email, sizeof(email));
+			fich.write((char *)direccion, sizeof(direccion));
+			fich.write((char *)fecha, sizeof(fecha));
+			fich.write((char *)Get_Alumno(i).Get_Telefono(), sizeof(int));
+			fich.write((char *)Get_Alumno(i).Get_Curso(), sizeof(int));
+			fich.write((char *)Get_Alumno(i).Get_Equipo(), sizeof(int));
+			fich.write((char *)Get_Alumno(i).Get_Lider(), sizeof(int));
 		}
-		else{
-			cout<<"El alumno no es lider del grupo"<<endl;
-		}
-		fich<<"## Alumno: "<<i<<endl;
-		fich<<"### DNI: "<<Get_Alumno(i).Get_DNI()<<endl;
-		fich<<"### Nombre: "<<Get_Alumno(i).Get_Nombre()<<endl;
-		fich<<"### Apellido: "<<Get_Alumno(i).Get_Apellido()<<endl;
-		fich<<"### Email: "<<Get_Alumno(i).Get_Email()<<endl;
-		fich<<"### Direccion: "<<Get_Alumno(i).Get_Direccion()<<endl;
-		fich<<"### Fecha de nacimiento: "<<Get_Alumno(i).Get_Fecha_Nacimiento()<<endl;
-		fich<<"### Telefono: "<<Get_Alumno(i).Get_Telefono()<<endl;
-		fich<<"### Curso mas alto: "<<Get_Alumno(i).Get_Curso()<<endl;
-		fich<<"### Equipo: "<<Get_Alumno(i).Get_Equipo()<<endl;
-		if(Get_Alumno(i).Get_Lider()==1){
-			fich<<"### El alumno es lider de grupo"<<endl;
-		}
-		else{
-			fich<<"### El alumno no es lider del grupo"<<endl<<endl;
-		}
+		fich.close();
 	}
-	fich.close();
 }
 
-void Profesor::Registrar_Profesor(){
+void Profesor::Registrar_Profesor(vector<Profesor>& profesores){
 
  	string Usuario=NULL, Password=NULL, Rol=NULL;
- 	char usuario, password, rol;
+ 	char usuario[20], password[20], rol[20];
+ 	bool encontrado=false;
  	Profesor p;
- 	ifstream ficheroEntrada("usuarios.txt");
+ 	ofstream fich("usuarios.txt", ios::binary);
 
  	cout<<"Introduzca el Usuario:"<<endl;
 	cin>>Usuario;
@@ -493,18 +550,37 @@ void Profesor::Registrar_Profesor(){
 		cout<<"ERROR, el rol está vacío"<<endl;
 		return;
 	}
-
-	while(!ficheroEntrada.eof()){
-
-		ficheroEntrada.read((char *);
-		Get_Agenda().Set_Profesor(p);
+	
+	for(int i=0; i<profesores.size() || encontrado==false; i++){
+		if(profesores[i].Get_Usuario()==Usuario){
+			encontrado=true;
+		}
 	}
+	if(encontrado==false){
+		if(fich.is_open()){
+			p.Set_Usuario(Usuario);
+			p.Set_Password(Password);
+			p.Set_Rol(Rol);
+			profesores.push_back(p);
+			strcpy(usuario, Usuario.c_str());
+			strcpy(password, Password.c_str());
+			strcpy(rol, Rol.c_str());
+			fich.write((char*)usuario, sizeof(usuario));
+			fich.write((char*)password, sizeof(password));
+			fich.write((char*)rol, sizeof(rol));
+		}
+	}
+	else{
+		cout<<"El usuario ya existe"<<endl;
+	}
+	fich.close();
 
- }
+}
 
- void Profesor::Iniciar_Sesion(){
+bool Profesor::Iniciar_Sesion(vector<Profesor>& profesores){
 
- 	string Usuario=NULL, Password=NULL, Rol=NULL;
+ 	string Usuario=NULL, Password=NULL;
+ 	bool exito=false, encontrado=false;
  	Profesor p;
 
  	cout<<"Introduzca el Usuario:"<<endl;
@@ -513,22 +589,57 @@ void Profesor::Registrar_Profesor(){
 	cout<<"Introduzca la contraseña:"<<endl;
 	cin>>Password;
 
-	cout<<"Introduzca el rol de profesor que cumple:"<<endl;
-	cin>>Rol;
+	if(Usuario.compare(NULL)==0){
+		cout<<"ERROR, el Usuario está vacío"<<endl;
+		return exito;
+	}
 
+	if(Password.compare(NULL)==0){
+		cout<<"ERROR, la contraseña está vacía"<<endl;
+		return exito;
+	}
+	for(int i; i<profesores.size() || exito==false || encontrado==false; i++){
+		if(profesores[i].Get_Usuario()==Usuario){
+			encontrado=true;
+			if(profesores[i].Get_Password()==Password){
+				exito=true;
+			}
+		}
+	}	
+	return exito;
+}
 
- 	if(Usuario.compare(p.Get_Usuario())!=0){
+void Profesor::Cargar_Usuarios(vector<Profesor>& profesores){
+	Profesor p;
+	ifstream fichero("usuarios.txt", ios::binary);
+	if(fichero.is_open()){
+		fichero.read((char *) &p, sizeof(Profesor));
+		profesores.push_back(p);
+		while(!fichero.eof()){
+			fichero.read((char *) &p, sizeof(Profesor));//Puede dar fallos por los strings, si ocurre eso, cambiar los strings por char.
+			profesores.push_back(p);
+		}
+		fichero.close();
+	}
+	else{
+		cout<<"ERROR el fichero no se ha abierto"<<endl;
+	}
+}
 
-		cout<<"ERROR, el usuario no coincide"<<endl;
+void Agenda::Visualizar_Grupo(){
+
+	int aux=0;
+
+	cout<<"Indique el grupo que desea visualizar"<<endl;
+	cin>>aux;
+
+	if(aux!=Get_Alumno(aux).Get_Equipo()){
+
+		cout<<"Dicho grupo no existe"<<endl;
 		return;
 	}
 
-	if(Password.compare(p.Get_Password())!=0){
+	cout<<"El equipo "<<Get_Alumno(aux).Get_Equipo()<<"está compuesto por:"<<endl;
+	cout<<Get_Alumno(aux).Get_Nombre()<<" "<<Get_Alumno(aux).Get_Apellido()<<endl;
 
-		cout<<"ERROR, ela contraseña no coincide"<<endl;
-		return;
-	}
-
-	
- }
-
+}
