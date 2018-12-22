@@ -9,6 +9,7 @@ int main(void){
   int opcion1=-1, opcion2;
   vector <Profesor> profesores;
   Profesor p;
+  Agenda agenda_act;
   while(opcion1!=0){
   	opcion2=-1;
   	cout<<"Introduzca una opcion:"<<endl;
@@ -16,6 +17,7 @@ int main(void){
   	cout<<"2. Registrar usuario"<<endl;
   	cout<<"0. salir"<<endl;
   	cin>>opcion1;
+
   	switch(opcion1){
   		case 1:
   			while(opcion2!=0){
@@ -33,60 +35,60 @@ int main(void){
   				cin>>opcion2;
   				switch(opcion2){
   					case 1:
-  						p.Get_Agenda().Insertar_Alumno();
+  						agenda_act.Insertar_Alumno();
   					break;
-  					
+
   					case 2:
-  					
+  					     agenda_act.Modificar_Alumno();
   					break;
-  					
+
   					case 3:
-  					
+          			    agenda_act.Eliminar_Alumno();
   					break;
-  					
+
   					case 4:
-  					
+
   					break;
-  					
+
   					case 5:
-  					
+
   					break;
-  					
+
   					case 6:
-  					
+
   					break;
-  					
+
   					case 7:
-  					
+
   					break;
-  					
+
   					case 8:
-  						p.Get_Agenda().Imprimir_Pantalla();
+  						agenda_act.Imprimir_Pantalla();
   					break;
-  					
+
   					case 9:
-  					
+
   					break;
-  					
+
   					case 0:
   						cout<<"Se ha cerrado la sesion"<<endl<<endl;
   					break;
-  					
+
   					default:
   						cout<<"Opcion incorrecta"<<endl<<endl;
   					break;
   				};
   			}
   		break;
-  		
+
   		case 2:
-  			
+
   		break;
-  		
+
   		case 0:
   			cout<<"El sistema se va a cerrar"<<endl;
   		break;
-  		
+
   		default:
   			cout<<"Opcion desconocida"<<endl;
   		break;
