@@ -46,7 +46,7 @@ private:
   vector<Alumno> alumnos;
 public:
   Alumno Get_Alumno(int h){return alumnos[h];}
-  void Set_Alumno(Alumno alumno){alumnos.push_back(alumno);}
+  void Set_Alumno_Lista(Alumno alumno){alumnos.push_back(alumno);}
   int Get_Tamano();
   bool Buscar_Alumno(string cadena);
   void Imprimir_Pantalla();
@@ -65,11 +65,11 @@ public:
   void Set_Usuario(string Usuario){Usuario_=Usuario;}
   string Get_Password(){return Password_;}
   void Set_Password(string Password){Password_=Password;}
-  void Set_Profesor(Profesor p);
   string Get_Rol(){return Rol_;}
   void Set_Rol(string rol){Rol_=rol;}
-  Agenda Get_Agenda(){return agenda_;}
-  void Set_Agenda(Agenda agenda){agenda_=agenda;}
+  void Set_Profesor(Profesor p);
+  Agenda Get_Agenda(){return agenda_;}//
+  void Set_Agenda(Agenda agenda){agenda_=agenda;}//
   void Hacer_Copia();
   void Cargar_Copia();
   void Registrar_Profesor(vector<Profesor>& profesores);
