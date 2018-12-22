@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
-#include <string.h>
+#include <cstring>
 #include "programa.h"
 
 using namespace std;
@@ -42,26 +42,27 @@ void Alumno::Set_Alumno(Alumno alumno){
 bool Agenda::Buscar_Alumno(string cadena){
 
 	bool enc=false;
-	int aux[20], n=0, i;
+	int aux[20], n=0, i, tamano=Get_Tamano();
 	string DNI;
 	if(alumnos.empty()==true){
 		return enc;
 	}
 	else{
-		for(i=0; i<Get_Tamano() || enc==false; i++){		
-	
+		for(i=0; i<tamano || enc==false; i++){
+			
 			if(cadena==Get_Alumno(i).Get_DNI()){
 
 				enc=true;
 			}
 			if(cadena==Get_Alumno(i).Get_Apellido()){
-			
+
 				aux[n]=i;
 				n++;
 			}
-		}	
-		while(enc==false || n!=0){
-	
+		}
+		cout<<"Hola9"<<endl;
+		while(enc==false && n!=0){
+
 			if(n==1){
 				enc=true;
 			}
@@ -73,10 +74,10 @@ bool Agenda::Buscar_Alumno(string cadena){
 						enc=true;
 					}
 				}
-			}	
+			}
 		}
 		return enc;
-	}	
+	}
 }
 
 void Agenda::Insertar_Alumno(){
@@ -84,7 +85,7 @@ void Agenda::Insertar_Alumno(){
 	int Telefono=0, Curso=0, Equipo=0, lider;
 	int pos=Get_Tamano();
 	Alumno aux;
-	
+
 	cout<<"Introduzca el DNI:"<<endl;
 	cin>>DNI;
 	cout<<"Introduzca el Nombre:"<<endl;
@@ -110,8 +111,8 @@ void Agenda::Insertar_Alumno(){
 	if(lider!=1){
 		lider=2;
 	}
-
-	if(DNI.compare("NULL")==0){
+	
+	if(DNI=="NULL"){
 		cout<<"ERROR, el DNI está vacío"<<endl;
 		return;
 	}
@@ -140,6 +141,7 @@ void Agenda::Insertar_Alumno(){
 		return;
 	}
 	if(Buscar_Alumno(DNI)==false){
+		cout<<"Hola"<<endl;
 		aux.Set_DNI(DNI);
 		aux.Set_Nombre(Nombre);
 		aux.Set_Apellido(Apellidos);
@@ -150,8 +152,7 @@ void Agenda::Insertar_Alumno(){
 		aux.Set_Curso(Curso);
 		aux.Set_Equipo(Equipo);
 		aux.Set_Lider(lider);
-		
-		Set_Alumno(aux);
+		Set_Alumno_Lista(aux);
 		cout<<"Alumno introducido con exito"<<endl;
 	}
 	else{
@@ -163,7 +164,7 @@ void Agenda::Eliminar_Alumno(){
 
 	int pos=Get_Tamano();
 	string cadena;
-	
+
 	cout<<"Introduzca el DNI del alumno a eliminar:"<<endl;
 	cin>>cadena;
 	if(Buscar_Alumno(cadena)==true){
@@ -176,7 +177,7 @@ void Agenda::Eliminar_Alumno(){
 	}
 	else{
 		cout<<"ERROR el usuario no esta"<<endl;
-	}	
+	}
 }
 
 void Agenda::Modificar_Alumno(){
@@ -207,12 +208,12 @@ void Agenda::Modificar_Alumno(){
 			cout<<"9. Equipo"<<endl;
 			cout<<"10. Lider"<<endl;
 			cout<<"0. SALIR"<<endl;
-			cin>>aux;
-			if(aux>0 && aux<11){
-				datos[n]=aux;
+			cin>>opc;
+			if(opc>0 && opc<11){
+				datos[n]=opc;
 				n++;
 			}
-			else if(aux==0){
+			else if(opc==0){
 
 			}
 			else{
@@ -224,57 +225,57 @@ void Agenda::Modificar_Alumno(){
 			case 1:
 				cout<<"Introduzca un nuevo nombre:"<<endl;
 				cin>>cadena;
-				Get_Alumno(h).Set_Nombre(cadena);
+				alumnos[h].Set_Nombre(cadena);
 			break;
-			
+
 			case 2:
 				cout<<"Introduzca unos nuevos apellidos"<<endl;
 				cin>>cadena;
-				Get_Alumno(h).Set_Apellido(cadena);
+				alumnos[h].Set_Apellido(cadena);
 			break;
-			
+
 			case 3:
 				cout<<"Introduzca un nuevo DNI"<<endl;
-				cin>>cadena;		
-				Get_Alumno(h).Set_DNI(cadena);	
+				cin>>cadena;
+				alumnos[h].Set_DNI(cadena);
 			break;
-			
+
 			case 4:
 				cout<<"Introduzca un nuevo email"<<endl;
-				cin>>cadena;		
-				Get_Alumno(h).Set_Email(cadena);	
+				cin>>cadena;
+				alumnos[h].Set_Email(cadena);
 			break;
-			
+
 			case 5:
 				cout<<"Introduzca una nueva direccion"<<endl;
-				cin>>cadena;	
-				Get_Alumno(h).Set_Direccion(cadena);		
+				cin>>cadena;
+				alumnos[h].Set_Direccion(cadena);
 			break;
-			
+
 			case 6:
 				cout<<"Introduzca un nuevo telefono"<<endl;
-				cin>>aux;	
-				Get_Alumno(h).Set_Telefono(aux);		
+				cin>>aux;
+				alumnos[h].Set_Telefono(aux);
 			break;
-			
+
 			case 7:
 				cout<<"Introduzca una nueva fecha de nacimiento"<<endl;
-				cin>>cadena;	
-				Get_Alumno(h).Set_Fecha_Nacimiento(cadena);		
+				cin>>cadena;
+				alumnos[h].Set_Fecha_Nacimiento(cadena);
 			break;
-			
+
 			case 8:
 				cout<<"Introduzca un nuevo curso mas alto"<<endl;
-				cin>>aux;	
-				Get_Alumno(h).Set_Curso(aux);		
+				cin>>aux;
+				alumnos[h].Set_Curso(aux);
 			break;
-			
+
 			case 9:
 				cout<<"Introduzca un nuevo equipo"<<endl;
-				cin>>aux;	
-				Get_Alumno(h).Set_Equipo(aux);		
+				cin>>aux;
+				alumnos[h].Set_Equipo(aux);
 			break;
-			
+
 			case 10:
 				cout<<"Introduzca 1 si es lider o 2 si no lo es"<<endl;
 				cin>>lider;
@@ -290,14 +291,14 @@ void Agenda::Modificar_Alumno(){
 					}
 				}
 				if(encontrado==false){
-					Get_Alumno(h).Set_Lider(lider);	
+					alumnos[h].Set_Lider(lider);
 				}
 				else{
 					cout<<"Error, ya hay un lider en el grupo"<<endl;
 				}
 			break;
-			
-			};	
+
+			};
 		}
 		cout<<"Cambios realizados con exito"<<endl;
 	}
@@ -355,19 +356,19 @@ void Profesor::Cargar_Fichero(){
 	}
 /*coge los datos del sistema y los mete en un fichero
 Abrimos el fichero y ponemos la correccion de errores y todo eso
-recorremos el vector de la agenda y vamos mentiendo dentro de cada linea del fichero 
+recorremos el vector de la agenda y vamos mentiendo dentro de cada linea del fichero
 todos los valores de un alumno y pasamos a la siguiente linea*/
 }
 
 void Profesor::Hacer_Copia(){
 	time_t rawtime;
 	struct tm * tlocal;
-	
+
 	time(&rawtime);
 	tlocal=localtime(&rawtime);
 	char output[11];
 	strftime(output, 11,"%d/%m/%y", tlocal);
-	
+
 	int i;
 	char dni[20], nombre[20], apellido[20], email[20], direccion[20], fecha[20];
 	ofstream fichero(output, ios::binary);
@@ -440,7 +441,7 @@ void Agenda::Imprimir_Pantalla(){
 					}
 				}
 			break;
-			
+
 			case 2:
 				for(int i=0; i<tamano; i++){
 					for(int j=i; j<tamano; j++){
@@ -452,7 +453,7 @@ void Agenda::Imprimir_Pantalla(){
 					}
 				}
 			break;
-			
+
 			case 3:
 				for(int i=0; i<tamano; i++){
 					for(int j=i; j<tamano; j++){
@@ -464,7 +465,7 @@ void Agenda::Imprimir_Pantalla(){
 					}
 				}
 			break;
-			
+
 			case 4:
 				for(int i=0; i<tamano; i++){
 					for(int j=i; j<tamano; j++){
@@ -476,7 +477,7 @@ void Agenda::Imprimir_Pantalla(){
 					}
 				}
 			break;
-			
+
 			default:
 				cout<<"Opcion incorrecta"<<endl;
 			break;
@@ -504,16 +505,17 @@ void Agenda::Imprimir_Pantalla(){
 			strcpy(email, Get_Alumno(i).Get_Email().c_str());
 			strcpy(direccion, Get_Alumno(i).Get_Direccion().c_str());
 			strcpy(fecha, Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
-			fich.write((char *)dni, sizeof(dni));
-			fich.write((char *)nombre, sizeof(nombre));
-			fich.write((char *)apellido, sizeof(apellido));
-			fich.write((char *)email, sizeof(email));
-			fich.write((char *)direccion, sizeof(direccion));
-			fich.write((char *)fecha, sizeof(fecha));
-			fich.write((char *)Get_Alumno(i).Get_Telefono(), sizeof(int));
-			fich.write((char *)Get_Alumno(i).Get_Curso(), sizeof(int));
-			fich.write((char *)Get_Alumno(i).Get_Equipo(), sizeof(int));
-			fich.write((char *)Get_Alumno(i).Get_Lider(), sizeof(int));
+
+			fich.write(dni, sizeof(char[20]));
+			fich.write(nombre, sizeof(char[20]));
+			fich.write(apellido, sizeof(char[20]));
+			fich.write(email, sizeof(char[20]));
+			//fich.write((char *)direccion, sizeof(direccion));
+			//fich.write((char *)fecha, sizeof(fecha));
+			//fich.write((char *)Get_Alumno(i).Get_Telefono(), sizeof(int));
+			//fich.write((char *)Get_Alumno(i).Get_Curso(), sizeof(int));
+			//fich.write((char *)Get_Alumno(i).Get_Equipo(), sizeof(int));
+			//fich.write((char *)Get_Alumno(i).Get_Lider(), sizeof(int));
 		}
 		fich.close();
 	}
@@ -550,7 +552,7 @@ void Profesor::Registrar_Profesor(vector<Profesor>& profesores){
 		cout<<"ERROR, el rol está vacío"<<endl;
 		return;
 	}
-	
+
 	for(int i=0; i<profesores.size() || encontrado==false; i++){
 		if(profesores[i].Get_Usuario()==Usuario){
 			encontrado=true;
@@ -605,7 +607,7 @@ bool Profesor::Iniciar_Sesion(vector<Profesor>& profesores){
 				exito=true;
 			}
 		}
-	}	
+	}
 	return exito;
 }
 
