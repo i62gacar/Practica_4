@@ -6,6 +6,15 @@
 
 using namespace std;
 
+struct Auxiliar_alumno{
+	char dni[20], apellido[20], nombre[20], email[20], direccion[20], fecha[20];
+	int telefono, curso, equipo, lider;
+};
+
+struct Auxiliar_profesor{
+	char usuario[20], password[20], rol[20];
+};
+
 class Persona{
 private:
   string DNI_, Nombre_, Apellido_, Email_, Direccion_, Fecha_Nacimiento_;
@@ -59,7 +68,6 @@ public:
 class Profesor: public Persona{
 private:
   string Usuario_, Password_, Rol_;
-  Agenda agenda_;
 public:
   string Get_Usuario(){return Usuario_;}
   void Set_Usuario(string Usuario){Usuario_=Usuario;}
@@ -68,14 +76,12 @@ public:
   string Get_Rol(){return Rol_;}
   void Set_Rol(string rol){Rol_=rol;}
   void Set_Profesor(Profesor p);
-  Agenda Get_Agenda(){return agenda_;}//
-  void Set_Agenda(Agenda agenda){agenda_=agenda;}//
-  void Hacer_Copia();
-  void Cargar_Copia();
+  void Hacer_Copia(Agenda &agenda);
+  void Cargar_Copia(Agenda &agenda);
   void Registrar_Profesor(vector<Profesor>& profesores);
   bool Iniciar_Sesion(vector<Profesor>& profesores);
-  void Guardar_Fichero();
-  void Cargar_Fichero();
+  void Guardar_Fichero(Agenda &agenda);
+  void Cargar_Fichero(Agenda &agenda);
   void Cargar_Usuarios(vector<Profesor>& profesores);
 };
 
