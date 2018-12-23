@@ -1,0 +1,10 @@
+Para compilar el archivo tienes que hacerlo con la siguiente linea:
+g++ principal.cpp programa.cpp -o programa
+
+Para ejecutarlo es simplemente con:
+./programa
+
+Los usuarios que he metido yo en el fichero han sido los siguientes:
+Usuario: Roberto
+Contraseña: 123
+Rol: coordinador
