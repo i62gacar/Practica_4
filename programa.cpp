@@ -48,8 +48,8 @@ bool Agenda::Buscar_Alumno(string cadena){
 		return enc;
 	}
 	else{
-		for(i=0; i<tamano || enc==false; i++){
-			
+		for(i=0; i<tamano && enc==false; i++){
+
 			if(cadena==Get_Alumno(i).Get_DNI()){
 
 				enc=true;
@@ -60,7 +60,6 @@ bool Agenda::Buscar_Alumno(string cadena){
 				n++;
 			}
 		}
-		cout<<"Hola9"<<endl;
 		while(enc==false && n!=0){
 
 			if(n==1){
@@ -111,7 +110,7 @@ void Agenda::Insertar_Alumno(){
 	if(lider!=1){
 		lider=2;
 	}
-	
+
 	if(DNI=="NULL"){
 		cout<<"ERROR, el DNI está vacío"<<endl;
 		return;
@@ -141,7 +140,6 @@ void Agenda::Insertar_Alumno(){
 		return;
 	}
 	if(Buscar_Alumno(DNI)==false){
-		cout<<"Hola"<<endl;
 		aux.Set_DNI(DNI);
 		aux.Set_Nombre(Nombre);
 		aux.Set_Apellido(Apellidos);
@@ -304,123 +302,134 @@ void Agenda::Modificar_Alumno(){
 	}
 }
 
-void Profesor::Guardar_Fichero(){
+void Profesor::Guardar_Fichero(Agenda &agenda){
 	string nomfich;
-	char nombre[20], apellido[20], dni[20], fecha[20], telefono[20], email[20], direccion[20], curso[2], equipo[2], lider[2];
-	Alumno aux;
+	Auxiliar_alumno aux;
+	Alumno alumno;
 	cout<<"Introduzca el nombre del fichero: "<<endl;
 	cin>>nomfich;
 	ifstream fichero(nomfich.c_str(), ios::binary);
 	if(fichero.is_open()){
-		fichero.read((char *) &aux, sizeof(Alumno));
+		fichero.read((char *) &aux, sizeof(Auxiliar_alumno));
 		while(!fichero.eof()){
-			fichero.read((char *) &aux, sizeof(Alumno));//Puede dar fallos por los strings, si ocurre eso, cambiar los strings por char.
+			alumno.Set_DNI(aux.dni);
+			alumno.Set_Nombre(aux.nombre);
+			alumno.Set_Apellido(aux.apellido);
+			alumno.Set_Telefono(aux.telefono);
+			alumno.Set_Email(aux.email);
+			alumno.Set_Direccion(aux.direccion);
+			alumno.Set_Fecha_Nacimiento(aux.fecha);
+			alumno.Set_Curso(aux.curso);
+			alumno.Set_Equipo(aux.equipo);
+			alumno.Set_Lider(aux.lider);
+			agenda.Set_Alumno_Lista(alumno);
+			fichero.read((char *) &aux, sizeof(Auxiliar_alumno));
 		}
 		fichero.close();
+		cout<<"Los datos se han introducido con exito"<<endl;
 	}
 	else{
-		cout<<"ERROR el fichero no se ha abierto"<<endl;
+		cout<<"Error el fichero no se ha abierto"<<endl;
 	}
 }
 
-void Profesor::Cargar_Fichero(){
+void Profesor::Cargar_Fichero(Agenda &agenda){
 	string nomfich;
 	int i;
-	char dni[20], nombre[20], apellido[20], email[20], direccion[20], fecha[20];
+	Auxiliar_alumno aux;
 	cout<<"Introduzca el nombre del fichero: "<<endl;
 	cin>>nomfich;
 	ofstream fichero(nomfich.c_str(), ios::binary);
 	if(fichero.is_open()){
-		for(i=0; i<Get_Agenda().Get_Tamano(); i++){
-			strcpy(dni, Get_Agenda().Get_Alumno(i).Get_DNI().c_str());
-			strcpy(nombre, Get_Agenda().Get_Alumno(i).Get_Nombre().c_str());
-			strcpy(apellido, Get_Agenda().Get_Alumno(i).Get_Apellido().c_str());
-			strcpy(email, Get_Agenda().Get_Alumno(i).Get_Email().c_str());
-			strcpy(direccion, Get_Agenda().Get_Alumno(i).Get_Direccion().c_str());
-			strcpy(fecha, Get_Agenda().Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
-			fichero.write((char *)dni, sizeof(dni));
-			fichero.write((char *)nombre, sizeof(nombre));
-			fichero.write((char *)apellido, sizeof(apellido));
-			fichero.write((char *)email, sizeof(email));
-			fichero.write((char *)direccion, sizeof(direccion));
-			fichero.write((char *)fecha, sizeof(fecha));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Telefono(), sizeof(int));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Curso(), sizeof(int));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Equipo(), sizeof(int));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Lider(), sizeof(int));
+		for(i=0; i<agenda.Get_Tamano(); i++){
+			strcpy(aux.dni, agenda.Get_Alumno(i).Get_DNI().c_str());
+			strcpy(aux.nombre, agenda.Get_Alumno(i).Get_Nombre().c_str());
+			strcpy(aux.apellido, agenda.Get_Alumno(i).Get_Apellido().c_str());
+			strcpy(aux.email, agenda.Get_Alumno(i).Get_Email().c_str());
+			strcpy(aux.direccion, agenda.Get_Alumno(i).Get_Direccion().c_str());
+			strcpy(aux.fecha, agenda.Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
+			aux.telefono=agenda.Get_Alumno(i).Get_Telefono();
+			aux.curso=agenda.Get_Alumno(i).Get_Curso();
+			aux.equipo=agenda.Get_Alumno(i).Get_Equipo();
+			aux.lider=agenda.Get_Alumno(i).Get_Lider();
+			fichero.write((const char *)&aux, sizeof(aux));
 		}
 		cout<<"Se han introducido los datos con exito"<<endl;
 	}
 	else{
 		cout<<"El fichero no se ha podido abrir"<<endl;
 	}
-/*coge los datos del sistema y los mete en un fichero
-Abrimos el fichero y ponemos la correccion de errores y todo eso
-recorremos el vector de la agenda y vamos mentiendo dentro de cada linea del fichero
-todos los valores de un alumno y pasamos a la siguiente linea*/
 }
 
-void Profesor::Hacer_Copia(){
+void Profesor::Hacer_Copia(Agenda &agenda){
 	time_t rawtime;
 	struct tm * tlocal;
 
 	time(&rawtime);
 	tlocal=localtime(&rawtime);
 	char output[11];
-	strftime(output, 11,"%d/%m/%y", tlocal);
+	strftime(output, 11,"%d-%m-%y", tlocal);
 
 	int i;
-	char dni[20], nombre[20], apellido[20], email[20], direccion[20], fecha[20];
+	Auxiliar_alumno aux;
 	ofstream fichero(output, ios::binary);
 	if(fichero.is_open()){
-		for(i=0; i<Get_Agenda().Get_Tamano(); i++){
-			strcpy(dni, Get_Agenda().Get_Alumno(i).Get_DNI().c_str());
-			strcpy(nombre, Get_Agenda().Get_Alumno(i).Get_Nombre().c_str());
-			strcpy(apellido, Get_Agenda().Get_Alumno(i).Get_Apellido().c_str());
-			strcpy(email, Get_Agenda().Get_Alumno(i).Get_Email().c_str());
-			strcpy(direccion, Get_Agenda().Get_Alumno(i).Get_Direccion().c_str());
-			strcpy(fecha, Get_Agenda().Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
-			fichero.write((char *)dni, sizeof(dni));
-			fichero.write((char *)nombre, sizeof(nombre));
-			fichero.write((char *)apellido, sizeof(apellido));
-			fichero.write((char *)email, sizeof(email));
-			fichero.write((char *)direccion, sizeof(direccion));
-			fichero.write((char *)fecha, sizeof(fecha));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Telefono(), sizeof(int));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Curso(), sizeof(int));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Equipo(), sizeof(int));
-			fichero.write((char *)Get_Agenda().Get_Alumno(i).Get_Lider(), sizeof(int));
+		for(i=0; i<agenda.Get_Tamano(); i++){
+			strcpy(aux.dni, agenda.Get_Alumno(i).Get_DNI().c_str());
+			strcpy(aux.nombre, agenda.Get_Alumno(i).Get_Nombre().c_str());
+			strcpy(aux.apellido, agenda.Get_Alumno(i).Get_Apellido().c_str());
+			strcpy(aux.email, agenda.Get_Alumno(i).Get_Email().c_str());
+			strcpy(aux.direccion, agenda.Get_Alumno(i).Get_Direccion().c_str());
+			strcpy(aux.fecha, agenda.Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
+			aux.telefono=agenda.Get_Alumno(i).Get_Telefono();
+			aux.curso=agenda.Get_Alumno(i).Get_Curso();
+			aux.equipo=agenda.Get_Alumno(i).Get_Equipo();
+			aux.lider=agenda.Get_Alumno(i).Get_Lider();
+			fichero.write((const char *)&aux, sizeof(aux));
 		}
-		cout<<"Se han introducido los datos con exito"<<endl;
+		cout<<"La copia se ha generado correctamente como "<<output<<endl;
 	}
 	else{
 		cout<<"El fichero no se ha podido abrir"<<endl;
 	}
 }
 
-void Profesor::Cargar_Copia(){
+void Profesor::Cargar_Copia(Agenda &agenda){
 	string nomfich;
-	char nombre[20], apellido[20], dni[20], fecha[20], telefono[20], email[20], direccion[20], curso[2], equipo[2], lider[2];
-	Alumno aux;
+	Auxiliar_alumno aux;
+	Alumno alumno;
 	cout<<"Introduzca el nombre del fichero: "<<endl;
 	cin>>nomfich;
 	ifstream fichero(nomfich.c_str(), ios::binary);
 	if(fichero.is_open()){
-		fichero.read((char *) &aux, sizeof(Alumno));
+		fichero.read((char *) &aux, sizeof(Auxiliar_alumno));
 		while(!fichero.eof()){
-			fichero.read((char *) &aux, sizeof(Alumno));//Puede dar fallos por los strings, si ocurre eso, cambiar los strings por char.
+			alumno.Set_DNI(aux.dni);
+			alumno.Set_Nombre(aux.nombre);
+			alumno.Set_Apellido(aux.apellido);
+			alumno.Set_Telefono(aux.telefono);
+			alumno.Set_Email(aux.email);
+			alumno.Set_Direccion(aux.direccion);
+			alumno.Set_Fecha_Nacimiento(aux.fecha);
+			alumno.Set_Curso(aux.curso);
+			alumno.Set_Equipo(aux.equipo);
+			alumno.Set_Lider(aux.lider);
+			agenda.Set_Alumno_Lista(alumno);
+			fichero.read((char *) &aux, sizeof(Auxiliar_alumno));
 		}
 		fichero.close();
+		cout<<"La copia se han introducido con exito"<<endl;
 	}
 	else{
-		cout<<"ERROR el fichero no se ha abierto"<<endl;
+		cout<<"Error el fichero no se ha abierto"<<endl;
 	}
 }
 
 void Agenda::Imprimir_Pantalla(){
 	int tamano=Get_Tamano(), opcion;
 	char dni[20], nombre[20], apellido[20], email[20], direccion[20], fecha[20];
-	Alumno aux;
+	
+	Auxiliar_alumno aux;
 	ofstream fich("Alumnos.md", ios::binary);
 	if(fich.is_open()){
 /*		cout<<"Porque variable desea ordenar: "<<endl;
@@ -499,23 +508,17 @@ void Agenda::Imprimir_Pantalla(){
 			else{
 				cout<<"El alumno no es lider del grupo"<<endl;
 			}
-			strcpy(dni, Get_Alumno(i).Get_DNI().c_str());
-			strcpy(nombre, Get_Alumno(i).Get_Nombre().c_str());
-			strcpy(apellido, Get_Alumno(i).Get_Apellido().c_str());
-			strcpy(email, Get_Alumno(i).Get_Email().c_str());
-			strcpy(direccion, Get_Alumno(i).Get_Direccion().c_str());
-			strcpy(fecha, Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
-
-			fich.write(dni, sizeof(char[20]));
-			fich.write(nombre, sizeof(char[20]));
-			fich.write(apellido, sizeof(char[20]));
-			fich.write(email, sizeof(char[20]));
-			//fich.write((char *)direccion, sizeof(direccion));
-			//fich.write((char *)fecha, sizeof(fecha));
-			//fich.write((char *)Get_Alumno(i).Get_Telefono(), sizeof(int));
-			//fich.write((char *)Get_Alumno(i).Get_Curso(), sizeof(int));
-			//fich.write((char *)Get_Alumno(i).Get_Equipo(), sizeof(int));
-			//fich.write((char *)Get_Alumno(i).Get_Lider(), sizeof(int));
+			strcpy(aux.dni, Get_Alumno(i).Get_DNI().c_str());
+			strcpy(aux.nombre, Get_Alumno(i).Get_Nombre().c_str());
+			strcpy(aux.apellido, Get_Alumno(i).Get_Apellido().c_str());
+			strcpy(aux.email, Get_Alumno(i).Get_Email().c_str());
+			strcpy(aux.direccion, Get_Alumno(i).Get_Direccion().c_str());
+			strcpy(aux.fecha, Get_Alumno(i).Get_Fecha_Nacimiento().c_str());
+			aux.telefono=Get_Alumno(i).Get_Telefono();
+			aux.curso=Get_Alumno(i).Get_Curso();
+			aux.equipo=Get_Alumno(i).Get_Equipo();
+			aux.lider=Get_Alumno(i).Get_Lider();
+			fich.write((const char *)&aux, sizeof(aux));
 		}
 		fich.close();
 	}
@@ -523,11 +526,12 @@ void Agenda::Imprimir_Pantalla(){
 
 void Profesor::Registrar_Profesor(vector<Profesor>& profesores){
 
- 	string Usuario=NULL, Password=NULL, Rol=NULL;
- 	char usuario[20], password[20], rol[20];
+ 	string Usuario, Password, Rol;
+ 	int rol=0;
+ 	Auxiliar_profesor aux;
  	bool encontrado=false;
  	Profesor p;
- 	ofstream fich("usuarios.txt", ios::binary);
+ 	ofstream fich("usuarios.bin", ios::binary);
 
  	cout<<"Introduzca el Usuario:"<<endl;
 	cin>>Usuario;
@@ -535,25 +539,26 @@ void Profesor::Registrar_Profesor(vector<Profesor>& profesores){
 	cout<<"Introduzca la contraseña:"<<endl;
 	cin>>Password;
 
-	cout<<"Introduzca el rol de profesor que cumple:"<<endl;
-	cin>>Rol;
+	cout<<"Introduzca el rol de profesor que cumple:"<<endl<<"1. si es coordinador"<<endl<<"2. si es ayudante"<<endl;
+	cin>>rol;
+	if(rol==1){
+		Rol="coordinador";
+	}
+	else{
+		Rol="ayudante";
+	}
 
-	if(Usuario.compare(NULL)==0){
+	if(Usuario.compare("NULL")==0){
 		cout<<"ERROR, el Usuario está vacío"<<endl;
 		return;
 	}
 
-	if(Password.compare(NULL)==0){
+	if(Password.compare("NULL")==0){
 		cout<<"ERROR, la contraseña está vacía"<<endl;
 		return;
 	}
 
-	if(Rol.compare(NULL)==0){
-		cout<<"ERROR, el rol está vacío"<<endl;
-		return;
-	}
-
-	for(int i=0; i<profesores.size() || encontrado==false; i++){
+	for(int i=0; i<profesores.size() && encontrado==false; i++){
 		if(profesores[i].Get_Usuario()==Usuario){
 			encontrado=true;
 		}
@@ -564,26 +569,25 @@ void Profesor::Registrar_Profesor(vector<Profesor>& profesores){
 			p.Set_Password(Password);
 			p.Set_Rol(Rol);
 			profesores.push_back(p);
-			strcpy(usuario, Usuario.c_str());
-			strcpy(password, Password.c_str());
-			strcpy(rol, Rol.c_str());
-			fich.write((char*)usuario, sizeof(usuario));
-			fich.write((char*)password, sizeof(password));
-			fich.write((char*)rol, sizeof(rol));
+			strcpy(aux.usuario, Usuario.c_str());
+			strcpy(aux.password, Password.c_str());
+			strcpy(aux.rol, Rol.c_str());
+			fich.write((const char *)&aux, sizeof(aux));
+			cout<<"Usuario introducido con exito"<<endl<<endl;
 		}
 	}
 	else{
-		cout<<"El usuario ya existe"<<endl;
+		cout<<"El usuario ya existe"<<endl<<endl;
 	}
 	fich.close();
-
 }
 
 bool Profesor::Iniciar_Sesion(vector<Profesor>& profesores){
 
- 	string Usuario=NULL, Password=NULL;
+ 	string Usuario, Password;
  	bool exito=false, encontrado=false;
  	Profesor p;
+ 	int i;
 
  	cout<<"Introduzca el Usuario:"<<endl;
 	cin>>Usuario;
@@ -591,20 +595,23 @@ bool Profesor::Iniciar_Sesion(vector<Profesor>& profesores){
 	cout<<"Introduzca la contraseña:"<<endl;
 	cin>>Password;
 
-	if(Usuario.compare(NULL)==0){
+	if(Usuario.compare("NULL")==0){
 		cout<<"ERROR, el Usuario está vacío"<<endl;
 		return exito;
 	}
 
-	if(Password.compare(NULL)==0){
+	if(Password.compare("NULL")==0){
 		cout<<"ERROR, la contraseña está vacía"<<endl;
 		return exito;
 	}
-	for(int i; i<profesores.size() || exito==false || encontrado==false; i++){
+	for(i=0; i<profesores.size() && exito==false && encontrado==false; i++){
 		if(profesores[i].Get_Usuario()==Usuario){
 			encontrado=true;
 			if(profesores[i].Get_Password()==Password){
 				exito=true;
+				Set_Usuario(profesores[i].Get_Usuario());
+				Set_Password(profesores[i].Get_Password());
+				Set_Rol(profesores[i].Get_Rol());
 			}
 		}
 	}
@@ -612,36 +619,58 @@ bool Profesor::Iniciar_Sesion(vector<Profesor>& profesores){
 }
 
 void Profesor::Cargar_Usuarios(vector<Profesor>& profesores){
-	Profesor p;
-	ifstream fichero("usuarios.txt", ios::binary);
+	Auxiliar_profesor aux;
+	Profesor profesor;
+	ifstream fichero("usuarios.bin", ios::binary);
 	if(fichero.is_open()){
-		fichero.read((char *) &p, sizeof(Profesor));
-		profesores.push_back(p);
+		fichero.read((char *) &aux, sizeof(Auxiliar_profesor));
 		while(!fichero.eof()){
-			fichero.read((char *) &p, sizeof(Profesor));//Puede dar fallos por los strings, si ocurre eso, cambiar los strings por char.
-			profesores.push_back(p);
+			profesor.Set_Usuario(aux.usuario);
+			profesor.Set_Password(aux.password);
+			profesor.Set_Rol(aux.rol);
+			profesores.push_back(profesor);
+			//cout<<profesor.Get_Usuario()<<endl;
+			fichero.read((char *) &aux, sizeof(Auxiliar_profesor));
 		}
 		fichero.close();
+		cout<<"Los profesores se han introducido con exito"<<endl<<endl;
 	}
 	else{
-		cout<<"ERROR el fichero no se ha abierto"<<endl;
+		cout<<"Error el fichero no se ha abierto"<<endl<<endl;
 	}
 }
 
 void Agenda::Visualizar_Grupo(){
 
-	int aux=0;
+	int grupo=0, tam=Get_Tamano(), aux[50], n=0, i;
 
 	cout<<"Indique el grupo que desea visualizar"<<endl;
-	cin>>aux;
-
-	if(aux!=Get_Alumno(aux).Get_Equipo()){
-
+	cin>>grupo;
+	for(i=0; i<tam; i++){
+		if(Get_Alumno(i).Get_Equipo()==grupo){
+			aux[n]=i;
+			n++;
+		}
+	}
+	if(n==0){
 		cout<<"Dicho grupo no existe"<<endl;
 		return;
 	}
+	else{
+		cout<<"El equipo "<<grupo<<" está compuesto por:"<<endl;
+		for(i=0; i<n; i++){
+			cout<<"Nombre: "<<Get_Alumno(aux[i]).Get_Nombre()<<endl;
+			cout<<"Apellido: "<<Get_Alumno(aux[i]).Get_Apellido()<<endl;
+			cout<<"DNI: "<<Get_Alumno(aux[i]).Get_DNI()<<endl;
+			cout<<"Email: "<<Get_Alumno(aux[i]).Get_Email()<<endl;
+			cout<<"Direccion: "<<Get_Alumno(aux[i]).Get_Direccion()<<endl;
+			cout<<"Fecha de nacimiento: "<<Get_Alumno(aux[i]).Get_Fecha_Nacimiento()<<endl;
+			cout<<"Telefono: "<<Get_Alumno(aux[i]).Get_Telefono()<<endl;
+			cout<<"Curso mas alto: "<<Get_Alumno(aux[i]).Get_Curso()<<endl;
+			cout<<"Equipo: "<<Get_Alumno(aux[i]).Get_Equipo()<<endl;
+			cout<<"Lider: "<<Get_Alumno(aux[i]).Get_Lider()<<endl<<endl;
+		}
+	}
 
-	cout<<"El equipo "<<Get_Alumno(aux).Get_Equipo()<<"está compuesto por:"<<endl;
-	cout<<Get_Alumno(aux).Get_Nombre()<<" "<<Get_Alumno(aux).Get_Apellido()<<endl;
 
 }
